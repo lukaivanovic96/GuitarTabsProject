@@ -1,3 +1,5 @@
+package server;
+
 class Artist {
     private String name;
     private String surname;
