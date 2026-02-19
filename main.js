@@ -1,14 +1,3 @@
-const artists = [
-  {
-    name : "Pera",
-    surname : "Perić"
-  },
-  {
-    name : "Mika",
-    surname : "Mikić"
-  }
-];
-
 let artistList = document.getElementById("artists-list");
 
 function toCyrillic(text) {
@@ -17,16 +6,12 @@ function toCyrillic(text) {
     e: "е", z: "з", i: "и", k: "к", l: "л",
     m: "м", n: "н", o: "о", p: "п", r: "р",
     s: "с", t: "т", u: "у", f: "ф",
-    đ: "ђ", č : "ч", ć : "ћ",
+    đ: "ђ", č: "ч", ć: "ћ",
 
     A: "А", B: "Б", V: "В", G: "Г", D: "Д",
     E: "Е", Z: "З", I: "И", K: "К", L: "Л",
     M: "М", N: "Н", O: "О", P: "П", R: "Р",
     S: "С", T: "Т", U: "У", F: "Ф"
-  };
-
-  const matUpper = {
-
   };
 
   return text
@@ -35,16 +20,27 @@ function toCyrillic(text) {
     .join("");
 }
 
-artists.forEach(artist => {
-  const li = document.createElement("li");
-  li.textContent = `${artist.name} ${artist.surname}`;
-  artistList.appendChild(li);
-});
+function renderArtists(artists) {
+  artistList.innerHTML = ""; // očisti listu
 
+  artists.forEach(artist => {
+    const li = document.createElement("li");
+    li.textContent = `${artist.name} ${artist.surname}`;
+    li.textContent = toCyrillic(li.textContent);
+    artistList.appendChild(li);
+  });
+}
+
+// 🔥 POZIV BACKENDA
+fetch("/api/users")
+  .then(response => response.json())
+  .then(data => {
+    console.log("Stigli podaci:", data);
+    renderArtists(data);
+  })
+  .catch(err => console.error("Greška:", err));
+
+// Naslov
 document.querySelectorAll('h1').forEach(h1 => {
   h1.textContent = toCyrillic(h1.textContent);
-});
-
-document.querySelectorAll("#artists-list li").forEach(li => {
-  li.textContent = toCyrillic(li.textContent);
 });
