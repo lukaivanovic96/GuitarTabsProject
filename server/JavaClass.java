@@ -26,8 +26,7 @@ public class JavaClass {
 	    e.getResponseHeaders().set("Content-Type", "application/javascript; charset=utf-8");
 	    e.sendResponseHeaders(200, bytes.length);
 	    e.getResponseBody().write(bytes);
-	    e.close();String sa = "asd";
-	    sa.describeConstable();
+	    e.close();
 	});
 
 	httpServer.createContext("/views/style.css", e -> {
