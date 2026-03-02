@@ -1,0 +1,44 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.container {
+    max-width: 1000px;
+    margin: auto;
+}
+
+.artists {
+    margin-top: 20px;
+}
+
+.artists-wrapper {
+    text-align: center;
+}
+
+#artists-list-title {
+    margin-bottom: 20px;
+}
+
+.artists-list ul {
+    list-style: none;
+    padding: 0;
+    max-width: 400px;
+    margin: 20px auto;
+    font-family: Arial, sans-serif;
+}
+
+.artists-list li {
+    list-style: none;
+    background: #f4f6f8;
+    margin-bottom: 10px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    transition: 0.2s ease;
+}
+
+.artists-list li:hover {
+    background: #e2e8f0;
+    transform: translateY(-2px);
+}
