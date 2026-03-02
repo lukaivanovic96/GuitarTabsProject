@@ -1,4 +1,5 @@
 let artistList = "";
+// test
 
 document.addEventListener("DOMContentLoaded", () => {
   artistList = document.getElementById("artists-list");
