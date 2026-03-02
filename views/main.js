@@ -1,4 +1,13 @@
-let artistList = document.getElementById("artists-list");
+let artistList = "";
+
+document.addEventListener("DOMContentLoaded", () => {
+  artistList = document.getElementById("artists-list");
+
+  fetch("/artists")
+    .then(response => response.json())
+    .then(data => renderArtists(data))
+    .catch(err => console.error(err));
+});
 
 function toCyrillic(text) {
   const map = {
@@ -27,18 +36,50 @@ function renderArtists(artists) {
     const li = document.createElement("li");
     li.textContent = `${artist.name} ${artist.surname}`;
     li.textContent = toCyrillic(li.textContent);
+    li.addEventListener('click', function () {
+      toggleSongs(li, artist.id);
+    });
     artistList.appendChild(li);
   });
 }
 
-// 🔥 POZIV BACKENDA
-fetch("/api/users")
-  .then(response => response.json())
-  .then(data => {
-    console.log("Stigli podaci:", data);
-    renderArtists(data);
-  })
-  .catch(err => console.error("Greška:", err));
+async function toggleSongs(artistElement, artistId) {
+  const existingList = artistElement.querySelector(".songs-list");
+
+  // If already open → close it
+  if (existingList) {
+    existingList.remove();
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      // `/artist/${artistId}/songs`
+      `/songs`
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch songs");
+    }
+
+    const songs = await response.json();
+
+    const songsUl = document.createElement("ul");
+    songsUl.classList.add("songs-list");
+
+    songs.forEach(song => {
+      const songLi = document.createElement("li");
+      songLi.textContent = song.title; // change if field name differs
+      songsUl.appendChild(songLi);
+    });
+
+    artistElement.appendChild(songsUl);
+
+  } catch (error) {
+    console.error("Error loading songs:", error);
+  }
+}
+
 
 // Naslov
 document.querySelectorAll('h1').forEach(h1 => {
