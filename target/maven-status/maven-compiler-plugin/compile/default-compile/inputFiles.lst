@@ -1,0 +1,15 @@
+/home/nemvel/projects/luka_guitar_tabs/GuitarTabsProject/src/main/java/server/handler/SongHandler.java
+/home/nemvel/projects/luka_guitar_tabs/GuitarTabsProject/src/main/java/server/model/Artist.java
+/home/nemvel/projects/luka_guitar_tabs/GuitarTabsProject/src/main/java/server/repository/ArtistRepository.java
+/home/nemvel/projects/luka_guitar_tabs/GuitarTabsProject/src/main/java/server/GuitarTabsApplication.java
+/home/nemvel/projects/luka_guitar_tabs/GuitarTabsProject/src/main/java/server/model/Song.java
+/home/nemvel/projects/luka_guitar_tabs/GuitarTabsProject/src/main/java/server/handler/StaticFileHandler.java
+/home/nemvel/projects/luka_guitar_tabs/GuitarTabsProject/src/main/java/server/utils/HttpResponses.java
+/home/nemvel/projects/luka_guitar_tabs/GuitarTabsProject/src/main/java/server/repository/impl/ArtistRepositoryJdbc.java
+/home/nemvel/projects/luka_guitar_tabs/GuitarTabsProject/src/main/java/server/repository/impl/ArtistRepositoryImpl.java
+/home/nemvel/projects/luka_guitar_tabs/GuitarTabsProject/src/main/java/server/handler/ArtistHandler.java
+/home/nemvel/projects/luka_guitar_tabs/GuitarTabsProject/src/main/java/server/handler/ArtistDto.java
+/home/nemvel/projects/luka_guitar_tabs/GuitarTabsProject/src/main/java/server/handler/StaticFileHttpHandler.java
+/home/nemvel/projects/luka_guitar_tabs/GuitarTabsProject/src/main/java/server/bootstrap/SampleData.java
+/home/nemvel/projects/luka_guitar_tabs/GuitarTabsProject/src/main/java/server/repository/impl/SongRepositoryImpl.java
+/home/nemvel/projects/luka_guitar_tabs/GuitarTabsProject/src/main/java/server/repository/SongRepository.java

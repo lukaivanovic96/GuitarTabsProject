@@ -1,0 +1,17 @@
+server/repository/SongRepository.class
+server/handler/StaticFileHttpHandler.class
+server/repository/ArtistRepository.class
+server/repository/impl/SongRepositoryImpl.class
+server/handler/StaticFileHandler.class
+server/repository/impl/ArtistRepositoryJdbc.class
+server/model/Song.class
+server/model/Artist$ArtistBuilder.class
+server/bootstrap/SampleData.class
+server/handler/SongHandler.class
+server/utils/HttpResponses.class
+server/model/Song$SongBuilder.class
+server/handler/ArtistHandler.class
+server/handler/ArtistDto.class
+server/repository/impl/ArtistRepositoryImpl.class
+server/GuitarTabsApplication.class
+server/model/Artist.class
