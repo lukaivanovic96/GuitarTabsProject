@@ -32,12 +32,37 @@ public class GuitarTabsApplication {
         httpServer.createContext("/artists", new ArtistHandler(artistRepository, songRepository));
         httpServer.createContext("/songs", new SongHandler(songRepository));
 
-        httpServer.createContext("/main.js",
-                new StaticFileHttpHandler("main.js", "application/javascript; charset=utf-8"));
+        httpServer.createContext("/js", exchange -> {
+                String path = exchange.getRequestURI().getPath(); // npr. /js/main.js
+                String filePath = "src/main/resources" + path; // ili "resources" folder: "./resources" + path
+                String mime = "application/javascript; charset=utf-8";
+
+                try {
+                        byte[] bytes = java.nio.file.Files.readAllBytes(java.nio.file.Paths.get(filePath));
+                        exchange.getResponseHeaders().add("Content-Type", mime);
+                        exchange.sendResponseHeaders(200, bytes.length);
+                        exchange.getResponseBody().write(bytes);
+                } catch (Exception e) {
+                        // fajl ne postoji → 404
+                        exchange.sendResponseHeaders(404, -1);
+                } finally {
+                        exchange.close();
+                }
+        });
         httpServer.createContext("/style.css",
                 new StaticFileHttpHandler("style.css", "text/css; charset=utf-8"));
         httpServer.createContext("/",
                 new StaticFileHttpHandler("index.html", "text/html; charset=utf-8"));
+        httpServer.createContext("/artists.html",
+                new StaticFileHttpHandler("artists.html", "text/html; charset=utf-8"));
+        httpServer.createContext("/songs.html",
+                new StaticFileHttpHandler("songs.html", "text/html; charset=utf-8"));
+        httpServer.createContext("/about_us.html",
+                new StaticFileHttpHandler("about_us.html", "text/html; charset=utf-8"));
+
+
+        httpServer.createContext("/images/guitar_tabs_logo_4.png",
+                new StaticFileHttpHandler("images/guitar_tabs_logo_4.png", "image/png"));
 
         httpServer.start();
         logger.info("http://localhost:8080");
