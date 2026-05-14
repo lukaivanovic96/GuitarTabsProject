@@ -42,4 +42,14 @@ public class ArtistRepositoryJdbc implements ArtistRepository {
     public Artist save(Artist artist) {
         return null;
     }
+
+    @Override
+    public Artist update(int id, Artist artist) {
+        return null;
+    }
+
+    @Override
+    public boolean deleteById(int id) {
+        return false;
+    }
 }

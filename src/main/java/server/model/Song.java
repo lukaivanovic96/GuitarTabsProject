@@ -11,16 +11,8 @@ import lombok.Setter;
 @Setter
 @Builder
 public class Song {
-    /*
-     * The title of the song.
-     */
+    private int id;
     private String title;
-    /**
-     * The lyrics of the song.
-     */
     private String lyrics;
-    /*
-     * The ID of the artist who created the song.
-     */
     private int artistId;
 }

@@ -30,4 +30,21 @@ public class ArtistRepositoryImpl implements ArtistRepository {
         artists.add(artist);
         return artist;
     }
+
+    @Override
+    public Artist update(int id, Artist updated) {
+        for (Artist artist : artists) {
+            if (artist.getId() == id) {
+                artist.setName(updated.getName());
+                artist.setSurname(updated.getSurname());
+                return artist;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public boolean deleteById(int id) {
+        return artists.removeIf(artist -> artist.getId() == id);
+    }
 }

@@ -7,4 +7,7 @@ import java.util.List;
 public interface SongRepository {
     List<Song> findAll();
     List<Song> findByArtistId(int artistId);
+    Song save(Song song);
+    Song update(int id, Song song);
+    boolean deleteById(int id);
 }
