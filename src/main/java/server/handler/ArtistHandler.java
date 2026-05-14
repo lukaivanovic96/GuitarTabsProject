@@ -1,7 +1,6 @@
 package server.handler;
 
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import server.model.Artist;
 import server.repository.ArtistRepository;
 import server.repository.SongRepository;
@@ -11,7 +10,7 @@ import server.utils.Json;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-public class ArtistHandler implements HttpHandler {
+public class ArtistHandler extends BaseHandler {
 
     private static final Logger logger = Logger.getLogger(ArtistHandler.class.getName());
 
@@ -24,36 +23,9 @@ public class ArtistHandler implements HttpHandler {
     }
 
     @Override
-    public void handle(HttpExchange exchange) throws IOException {
-        String path = exchange.getRequestURI().getPath();
-        String method = exchange.getRequestMethod();
+    protected void handleGet(HttpExchange exchange, String path) throws IOException {
+        logger.info("GET " + path);
 
-        logger.info("HIT ARTISTS: " + method + " " + path);
-
-        if ("GET".equalsIgnoreCase(method)) {
-            handleGet(exchange, path);
-            return;
-        }
-
-        if ("POST".equalsIgnoreCase(method)) {
-            handlePost(exchange, path);
-            return;
-        }
-
-        if ("PUT".equalsIgnoreCase(method)) {
-            handlePut(exchange, path);
-            return;
-        }
-
-        if ("DELETE".equalsIgnoreCase(method)) {
-            handleDelete(exchange, path);
-            return;
-        }
-
-        HttpResponses.sendMethodNotAllowed(exchange);
-    }
-
-    private void handleGet(HttpExchange exchange, String path) throws IOException {
         if (path.equals("/artists") || path.equals("/artists/")) {
             HttpResponses.sendJson(exchange, artistRepository.findAll());
             return;
@@ -68,7 +40,10 @@ public class ArtistHandler implements HttpHandler {
         HttpResponses.sendNotFound(exchange);
     }
 
-    private void handlePost(HttpExchange exchange, String path) throws IOException {
+    @Override
+    protected void handlePost(HttpExchange exchange, String path) throws IOException {
+        logger.info("POST " + path);
+
         if (!path.equals("/artists") && !path.equals("/artists/")) {
             HttpResponses.sendNotFound(exchange);
             return;
@@ -76,14 +51,9 @@ public class ArtistHandler implements HttpHandler {
 
         try {
             ArtistDto request = Json.MAPPER.readValue(exchange.getRequestBody(), ArtistDto.class);
-
             validateArtistDto(request);
-
-            Artist artist = toArtist(request);
-            Artist savedArtist = artistRepository.save(artist);
-
+            Artist savedArtist = artistRepository.save(toArtist(request));
             HttpResponses.sendJson(exchange, 201, savedArtist);
-
         } catch (IOException e) {
             HttpResponses.sendBadRequest(exchange, "Invalid JSON body");
         } catch (IllegalArgumentException e) {
@@ -91,7 +61,10 @@ public class ArtistHandler implements HttpHandler {
         }
     }
 
-    private void handlePut(HttpExchange exchange, String path) throws IOException {
+    @Override
+    protected void handlePut(HttpExchange exchange, String path) throws IOException {
+        logger.info("PUT " + path);
+
         if (!path.matches("/artists/\\d+/?")) {
             HttpResponses.sendNotFound(exchange);
             return;
@@ -101,11 +74,8 @@ public class ArtistHandler implements HttpHandler {
 
         try {
             ArtistDto request = Json.MAPPER.readValue(exchange.getRequestBody(), ArtistDto.class);
-
             validateArtistDto(request);
-
-            Artist artist = toArtist(request);
-            Artist updatedArtist = artistRepository.update(artistId, artist);
+            Artist updatedArtist = artistRepository.update(artistId, toArtist(request));
 
             if (updatedArtist == null) {
                 HttpResponses.sendNotFound(exchange);
@@ -113,7 +83,6 @@ public class ArtistHandler implements HttpHandler {
             }
 
             HttpResponses.sendJson(exchange, updatedArtist);
-
         } catch (IOException e) {
             HttpResponses.sendBadRequest(exchange, "Invalid JSON body");
         } catch (IllegalArgumentException e) {
@@ -121,7 +90,10 @@ public class ArtistHandler implements HttpHandler {
         }
     }
 
-    private void handleDelete(HttpExchange exchange, String path) throws IOException {
+    @Override
+    protected void handleDelete(HttpExchange exchange, String path) throws IOException {
+        logger.info("DELETE " + path);
+
         if (!path.matches("/artists/\\d+/?")) {
             HttpResponses.sendNotFound(exchange);
             return;

@@ -1,7 +1,6 @@
 package server.handler;
 
 import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
 import server.model.Song;
 import server.repository.SongRepository;
 import server.utils.HttpResponses;
@@ -10,7 +9,7 @@ import server.utils.Json;
 import java.io.IOException;
 import java.util.logging.Logger;
 
-public class SongHandler implements HttpHandler {
+public class SongHandler extends BaseHandler {
 
     private static final Logger logger = Logger.getLogger(SongHandler.class.getName());
 
@@ -21,36 +20,9 @@ public class SongHandler implements HttpHandler {
     }
 
     @Override
-    public void handle(HttpExchange exchange) throws IOException {
-        String path = exchange.getRequestURI().getPath();
-        String method = exchange.getRequestMethod();
+    protected void handleGet(HttpExchange exchange, String path) throws IOException {
+        logger.info("GET " + path);
 
-        logger.info("HIT SONGS: " + method + " " + path);
-
-        if ("GET".equalsIgnoreCase(method)) {
-            handleGet(exchange, path);
-            return;
-        }
-
-        if ("POST".equalsIgnoreCase(method)) {
-            handlePost(exchange, path);
-            return;
-        }
-
-        if ("PUT".equalsIgnoreCase(method)) {
-            handlePut(exchange, path);
-            return;
-        }
-
-        if ("DELETE".equalsIgnoreCase(method)) {
-            handleDelete(exchange, path);
-            return;
-        }
-
-        HttpResponses.sendMethodNotAllowed(exchange);
-    }
-
-    private void handleGet(HttpExchange exchange, String path) throws IOException {
         if (path.equals("/songs") || path.equals("/songs/")) {
             HttpResponses.sendJson(exchange, songRepository.findAll());
             return;
@@ -59,7 +31,10 @@ public class SongHandler implements HttpHandler {
         HttpResponses.sendNotFound(exchange);
     }
 
-    private void handlePost(HttpExchange exchange, String path) throws IOException {
+    @Override
+    protected void handlePost(HttpExchange exchange, String path) throws IOException {
+        logger.info("POST " + path);
+
         if (!path.equals("/songs") && !path.equals("/songs/")) {
             HttpResponses.sendNotFound(exchange);
             return;
@@ -67,14 +42,9 @@ public class SongHandler implements HttpHandler {
 
         try {
             SongDto request = Json.MAPPER.readValue(exchange.getRequestBody(), SongDto.class);
-
             validateSongDto(request);
-
-            Song song = toSong(request);
-            Song savedSong = songRepository.save(song);
-
+            Song savedSong = songRepository.save(toSong(request));
             HttpResponses.sendJson(exchange, 201, savedSong);
-
         } catch (IOException e) {
             HttpResponses.sendBadRequest(exchange, "Invalid JSON body");
         } catch (IllegalArgumentException e) {
@@ -82,7 +52,10 @@ public class SongHandler implements HttpHandler {
         }
     }
 
-    private void handlePut(HttpExchange exchange, String path) throws IOException {
+    @Override
+    protected void handlePut(HttpExchange exchange, String path) throws IOException {
+        logger.info("PUT " + path);
+
         if (!path.matches("/songs/\\d+/?")) {
             HttpResponses.sendNotFound(exchange);
             return;
@@ -92,11 +65,8 @@ public class SongHandler implements HttpHandler {
 
         try {
             SongDto request = Json.MAPPER.readValue(exchange.getRequestBody(), SongDto.class);
-
             validateSongDto(request);
-
-            Song song = toSong(request);
-            Song updatedSong = songRepository.update(songId, song);
+            Song updatedSong = songRepository.update(songId, toSong(request));
 
             if (updatedSong == null) {
                 HttpResponses.sendNotFound(exchange);
@@ -104,7 +74,6 @@ public class SongHandler implements HttpHandler {
             }
 
             HttpResponses.sendJson(exchange, updatedSong);
-
         } catch (IOException e) {
             HttpResponses.sendBadRequest(exchange, "Invalid JSON body");
         } catch (IllegalArgumentException e) {
@@ -112,7 +81,10 @@ public class SongHandler implements HttpHandler {
         }
     }
 
-    private void handleDelete(HttpExchange exchange, String path) throws IOException {
+    @Override
+    protected void handleDelete(HttpExchange exchange, String path) throws IOException {
+        logger.info("DELETE " + path);
+
         if (!path.matches("/songs/\\d+/?")) {
             HttpResponses.sendNotFound(exchange);
             return;
